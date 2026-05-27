@@ -1,0 +1,11 @@
+package com.guvi.exception;
+
+public class EventNotExistException extends RuntimeException {
+
+	public EventNotExistException(String msg) {
+		super(msg);
+	}
+	
+	
+
+}
