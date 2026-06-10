@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.guvi.dto.SeatStatusDto;
 import com.guvi.entity.Seat;
 import com.guvi.service.SeatService;
 
@@ -32,8 +33,8 @@ public class SeatController {
 	}
 	
 	@GetMapping("/getAvailableSeats/{eventId}")
-	public ResponseEntity<List<Seat>> getAvalilableSeats(@PathVariable int eventId){
-		List<Seat> avlseat=stservice.getAvailableSeats(eventId);
+	public ResponseEntity<List<SeatStatusDto>> getAvalilableSeats(@PathVariable int eventId){
+		List<SeatStatusDto> avlseat=stservice.getAvailableSeats(eventId);
 		return new ResponseEntity<>(avlseat,HttpStatus.OK);
 	}
 }

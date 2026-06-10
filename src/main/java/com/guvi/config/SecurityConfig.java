@@ -51,11 +51,23 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Make auth endpoints public
-                .requestMatchers("/api/auth/**").permitAll()
-                // Everything else requires a valid JWT
-                .anyRequest().authenticated()
-            );
+
+            	    .requestMatchers("/api/auth/**").permitAll()
+
+            	    .requestMatchers(
+            	        "/swagger-ui/**",
+            	        "/swagger-ui.html",
+            	        "/v3/api-docs/**",
+            	        "/v3/api-docs",
+            	        "/swagger-resources/**",
+            	        "/webjars/**"
+            	    ).permitAll()
+
+            	    .requestMatchers("/api/admin/**")
+            	    .hasRole("ADMIN")
+
+            	    .anyRequest().authenticated()
+            	);
 
         // Ensure your JwtAuthFilter DOESN'T block /api/auth/** and runs for protected routes
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

@@ -143,12 +143,23 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	public List<BookingResponseDto> getUpcomingBookings(String username) {
-		LocalDateTime now = LocalDateTime.now();
-		List<Booking> bookings = brepo.findByUserUserName(username);
-		return bookings.stream().filter(b -> b.getEvent().getEventEndTime().isAfter(now)).map(b -> {
-			List<Ticket> tickets = trepo.findByBooking_BookingId(b.getBookingId());
-			return buildBookingResponse(b, tickets);
-		}).toList();
+
+	    LocalDateTime now = LocalDateTime.now();
+
+	    List<Booking> bookings = brepo.findByUserUserName(username);
+
+	    return bookings.stream()
+	        .filter(b -> b.getEvent().getEventEndTime().isAfter(now))
+	        .filter(b -> trepo.findByBooking_BookingId(b.getBookingId())
+	                .stream()
+	                .anyMatch(t -> t.getStatus() == TicketStatus.BOOKED))
+	        .map(b -> {
+	            List<Ticket> tickets =
+	                    trepo.findByBooking_BookingId(b.getBookingId());
+
+	            return buildBookingResponse(b, tickets);
+	        })
+	        .toList();
 	}
 
 }

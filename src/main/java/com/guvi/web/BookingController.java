@@ -21,10 +21,13 @@ import com.guvi.exception.BookingNotFoundException;
 import com.guvi.repo.BookingRepo;
 import com.guvi.service.BookingService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 @RestController
 @RequestMapping("api/bookings")
 @CrossOrigin(origins= {"http://localhost:5173"})
+@SecurityRequirement(name = "BearerAuth")
+
 public class BookingController {
 	
 	@Autowired

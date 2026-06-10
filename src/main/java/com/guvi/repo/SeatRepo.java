@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.guvi.entity.Seat;
 import com.guvi.entity.Stand;
+import com.guvi.entity.TicketStatus;
 @Repository
 public interface SeatRepo extends JpaRepository<Seat,Integer> {
 	
@@ -26,6 +27,7 @@ public interface SeatRepo extends JpaRepository<Seat,Integer> {
 			List<Seat> findAvailableSeats(@Param("eventId") Integer eventId);
 	List<Seat> findByEnabledTrue();
 	Optional<Seat> findByStandAndRowLabelAndSeatNo(Stand stand, String rowLabel, Integer seatNo);
-	 
+	
+	
 
 }
