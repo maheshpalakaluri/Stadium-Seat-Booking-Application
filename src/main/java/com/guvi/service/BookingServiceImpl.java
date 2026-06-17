@@ -104,6 +104,8 @@ public class BookingServiceImpl implements BookingService {
 			return buildBookingResponse(b, tickets);
 		}).toList();
 	}
+	
+	
 
 	@Override
 	public List<BookingResponseDto> getPastBookings(String Username) {
@@ -161,5 +163,15 @@ public class BookingServiceImpl implements BookingService {
 	        })
 	        .toList();
 	}
+
+//	@Override
+//	public void deleteBookingSeat(Integer bookingId, Integer seatId) {
+//		Optional<Booking> booking=brepo.findById(bookingId);
+//		if(booking.isPresent()) {
+//			List<Ticket> tickets=trepo.findByBooking_BookingId(bookingId);
+//			
+//			
+//		}
+//	}
 
 }
