@@ -29,6 +29,18 @@ public class User {
 
 	@Column(name = "enabled",nullable=false)
 	private Boolean enabled;
+	
+
+	public String getVerificationToken() {
+		return verificationToken;
+	}
+
+	public void setVerificationToken(String verificationToken) {
+		this.verificationToken = verificationToken;
+	}
+
+	@Column
+	private String verificationToken;
 
 	public User() {
 	}

@@ -1,5 +1,7 @@
 package com.guvi.service;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private RoleRepo rolerepo;
 	
+	@Autowired
+	private EmailService emailService;
+	
 //	@Override
 //	public boolean register(@Valid RegisterDto dto) {
 //		User user=new User();
@@ -41,9 +46,24 @@ public class UserServiceImpl implements UserService {
 		User user=new User();
 		user.setUserName(dto.getUserName());
 		user.setPassword(passwordEncoder.encode(dto.getPassword()));
-		user.setEnabled(Boolean.TRUE);
+		user.setEnabled(Boolean.FALSE);
+		user.setVerificationToken(UUID.randomUUID().toString());
 		user.setEmail(dto.getEmail());
 		userrepo.save(user);
+		String verificationLink =
+		        "http://localhost:8080/api/auth/verify?token="
+		                + user.getVerificationToken();
+
+		String body =
+		        "Welcome to StadiumBook!\n\n"
+		        + "Please verify your email by clicking:\n"
+		        + verificationLink;
+
+		emailService.sendEmail(
+		        user.getEmail(),
+		        "Verify your Email",
+		        body
+		);
 		
 		Role role=new Role();
 		RolePK key=new RolePK();

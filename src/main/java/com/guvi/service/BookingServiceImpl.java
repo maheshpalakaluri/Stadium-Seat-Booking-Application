@@ -164,14 +164,6 @@ public class BookingServiceImpl implements BookingService {
 	        .toList();
 	}
 
-//	@Override
-//	public void deleteBookingSeat(Integer bookingId, Integer seatId) {
-//		Optional<Booking> booking=brepo.findById(bookingId);
-//		if(booking.isPresent()) {
-//			List<Ticket> tickets=trepo.findByBooking_BookingId(bookingId);
-//			
-//			
-//		}
-//	}
+	
 
 }
