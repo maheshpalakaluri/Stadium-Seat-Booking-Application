@@ -1,12 +1,13 @@
 package com.guvi.service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDateTime; 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import java.time.format.DateTimeFormatter;
 
 import com.guvi.dto.BookingRequestDto;
 import com.guvi.dto.BookingResponseDto;
@@ -46,6 +47,9 @@ public class BookingServiceImpl implements BookingService {
 	@Autowired
 	private EventRepo erepo;
 
+	@Autowired
+	private EmailService emailService;
+
 	@Override
 	public BookingResponseDto bookSeats(BookingRequestDto request) {
 		try {
@@ -74,6 +78,23 @@ public class BookingServiceImpl implements BookingService {
 				return ticket;
 			}).toList();
 			trepo.saveAll(tickets);
+
+			String seatDescriptions = tickets.stream().map(ticket -> ticket.getSeat().getStands() + "-"
+					+ ticket.getSeat().getRowLabel() + "-" + ticket.getSeat().getSeatNo())
+					.collect(java.util.stream.Collectors.joining(", "));
+
+			try {
+				String formattedDate = event.getEventStartTime()
+						.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"));
+
+				emailService.sendBookingConfirmation(user.getEmail(), user.getUserName(), event.getEventDesc(),
+						formattedDate, seatDescriptions, savedBooking.getBookingId());
+
+				System.out.println("Booking confirmation email sent.");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			return buildBookingResponse(savedBooking, tickets);
 		} catch (DataIntegrityViolationException ex) {
 			throw new SeatUnavailableException("Seat is already booked");
@@ -104,8 +125,6 @@ public class BookingServiceImpl implements BookingService {
 			return buildBookingResponse(b, tickets);
 		}).toList();
 	}
-	
-	
 
 	@Override
 	public List<BookingResponseDto> getPastBookings(String Username) {
@@ -117,53 +136,36 @@ public class BookingServiceImpl implements BookingService {
 		}).toList();
 	}
 
-	public BookingResponseDto buildBookingResponse(
-	        Booking booking,
-	        List<Ticket> tickets) {
-	 
+	public BookingResponseDto buildBookingResponse(Booking booking, List<Ticket> tickets) {
+
 		BookingResponseDto response = new BookingResponseDto();
-	 
-	    response.setBookingId(booking.getBookingId());
-	    response.setUsername(booking.getUser().getUserName());
-	    response.setEventName(booking.getEvent().getEventDesc());
-	    response.setBoookedAt(booking.getBookedAt());
-	 
-	    // Map tickets → seat descriptions
-	    response.setSeats(
-	        tickets.stream()
-	               .map(ticket ->
-	                    ticket.getSeat().getStands() + "-" +
-	                    ticket.getSeat().getRowLabel() + "-" +
-	                    ticket.getSeat().getSeatNo()
-	               )
-	               .toList()
-	    );
-	 
-	    return response;
+
+		response.setBookingId(booking.getBookingId());
+		response.setUsername(booking.getUser().getUserName());
+		response.setEventName(booking.getEvent().getEventDesc());
+		response.setBoookedAt(booking.getBookedAt());
+
+		// Map tickets → seat descriptions
+		response.setSeats(tickets.stream().map(ticket -> ticket.getSeat().getStands() + "-"
+				+ ticket.getSeat().getRowLabel() + "-" + ticket.getSeat().getSeatNo()).toList());
+
+		return response;
 	}
-	 
 
 	@Override
 	public List<BookingResponseDto> getUpcomingBookings(String username) {
 
-	    LocalDateTime now = LocalDateTime.now();
+		LocalDateTime now = LocalDateTime.now();
 
-	    List<Booking> bookings = brepo.findByUserUserName(username);
+		List<Booking> bookings = brepo.findByUserUserName(username);
 
-	    return bookings.stream()
-	        .filter(b -> b.getEvent().getEventEndTime().isAfter(now))
-	        .filter(b -> trepo.findByBooking_BookingId(b.getBookingId())
-	                .stream()
-	                .anyMatch(t -> t.getStatus() == TicketStatus.BOOKED))
-	        .map(b -> {
-	            List<Ticket> tickets =
-	                    trepo.findByBooking_BookingId(b.getBookingId());
+		return bookings.stream().filter(b -> b.getEvent().getEventEndTime().isAfter(now)).filter(b -> trepo
+				.findByBooking_BookingId(b.getBookingId()).stream().anyMatch(t -> t.getStatus() == TicketStatus.BOOKED))
+				.map(b -> {
+					List<Ticket> tickets = trepo.findByBooking_BookingId(b.getBookingId());
 
-	            return buildBookingResponse(b, tickets);
-	        })
-	        .toList();
+					return buildBookingResponse(b, tickets);
+				}).toList();
 	}
-
-	
 
 }

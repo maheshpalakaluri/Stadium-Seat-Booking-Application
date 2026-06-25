@@ -22,4 +22,15 @@ public class EmailService {
 		mailSender.send(message);
 	}
 
+	public void sendBookingConfirmation(String to, String userName, String eventName, String eventDateTime,
+			String seats, Integer bookingId) {
+
+		String body = "🏟️ StadiumBook - Booking Confirmed\n\n" + "Hi " + userName + ",\n\n"
+				+ "Your booking has been confirmed.\n\n" + "Booking ID : #" + bookingId + "\n" + "Event      : "
+				+ eventName + "\n" + "Date & Time: " + eventDateTime + "\n" + "Seats      : " + seats + "\n\n"
+				+ "Thank you for booking with StadiumBook!";
+
+		sendEmail(to, "🎟️ Booking Confirmation - StadiumBook", body);
+	}
+
 }
