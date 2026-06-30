@@ -1,12 +1,47 @@
-# Backend
-backend/target/
+# ==========================
+# Maven
+# ==========================
+target/
+**/target/
 
-# Frontend
-frontend/node_modules/
+# ==========================
+# Eclipse / STS
+# ==========================
+bin/
+.settings/
+.classpath
+.project
+.springBeans
 
-# IDE
+# ==========================
+# VS Code
+# ==========================
 .vscode/
-.idea/
 
+# ==========================
+# IntelliJ
+# ==========================
+.idea/
+*.iml
+
+# ==========================
+# Node
+# ==========================
+node_modules/
+
+# ==========================
 # OS
+# ==========================
 .DS_Store
+Thumbs.db
+
+# ==========================
+# Logs
+# ==========================
+*.log
+
+# ==========================
+# Local Configuration (Secrets)
+# ==========================
+src/main/resources/application-local.properties
+.env
