@@ -30,10 +30,6 @@ public class Booking {
 	@Column(nullable=false)
 	private LocalDateTime bookedAt;
 	
-	/*
-	 * @Column(nullable=false) private BookingStatus status=BookingStatus.BOOKED;
-	 */
-	
 	@Column(nullable=true)
 	private LocalDateTime cancelledAt;
 

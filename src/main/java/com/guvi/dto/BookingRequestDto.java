@@ -12,7 +12,7 @@ public class BookingRequestDto {
 	
 	@NotNull
 	private Integer eventId;
-	
+
 	@NotEmpty
 	private List<Integer> seatIds;
 
