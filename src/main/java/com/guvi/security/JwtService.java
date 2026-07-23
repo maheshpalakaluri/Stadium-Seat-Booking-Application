@@ -56,7 +56,7 @@ public class JwtService {
 			return List.of();// empty list if claim missing
 		});
 	}
-
+	
 	public Date extractExpiration(String token) {
 		return extractClaim(token, Claims::getExpiration);
 	}
