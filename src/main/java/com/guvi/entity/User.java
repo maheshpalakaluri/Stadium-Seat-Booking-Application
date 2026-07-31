@@ -1,5 +1,7 @@
 package com.guvi.entity;
 
+import java.time.LocalDateTime;
+
 import com.guvi.validators.annotation.Password;
 
 import jakarta.persistence.Column;
@@ -30,6 +32,12 @@ public class User {
 	@Column(name = "enabled",nullable=false)
 	private Boolean enabled;
 	
+	@Column
+	private String verificationToken;
+	
+	@Column(name = "token_expiry")
+	private LocalDateTime tokenExpiry;
+	
 
 	public String getVerificationToken() {
 		return verificationToken;
@@ -38,9 +46,6 @@ public class User {
 	public void setVerificationToken(String verificationToken) {
 		this.verificationToken = verificationToken;
 	}
-
-	@Column
-	private String verificationToken;
 
 	public User() {
 	}
@@ -75,6 +80,14 @@ public class User {
 
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public LocalDateTime getTokenExpiry() {
+		return tokenExpiry;
+	}
+
+	public void setTokenExpiry(LocalDateTime tokenExpiry) {
+		this.tokenExpiry = tokenExpiry;
 	}
 
 	@Override

@@ -30,7 +30,5 @@ public class SeatActionDto {
 	public void setSeatNo(Integer seatNo) {
 		this.seatNo = seatNo;
 	}
-	
-	
-	
+
 }

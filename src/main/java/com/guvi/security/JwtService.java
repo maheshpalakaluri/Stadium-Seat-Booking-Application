@@ -25,7 +25,7 @@ public class JwtService {
 
 	@Value("${jwt.expiration}")
 	private long jwtExpiration;
-
+    
 	public String generateToken(String username, List<String> roles) { // Use email as username
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("roles", roles);

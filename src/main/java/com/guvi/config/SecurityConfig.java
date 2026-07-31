@@ -38,7 +38,7 @@ public class SecurityConfig {
         config.setAllowedHeaders(List.of("*"));
         // For pure JWT (no cookies), keep this FALSE
         config.setAllowCredentials(false);
-
+        
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;

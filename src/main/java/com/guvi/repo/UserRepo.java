@@ -8,4 +8,6 @@ import com.guvi.entity.User;
 @Repository
 public interface UserRepo extends JpaRepository<User,String> {
 	Optional<User> findByVerificationToken(String token);
+	
+	Optional<User> findByEmail(String email);
 }
