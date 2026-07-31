@@ -4,4 +4,5 @@ import com.guvi.dto.RegisterDto;
 
 public interface UserService {
 	public boolean register(RegisterDto dto);
+	public boolean verifyUser(String token);
 }

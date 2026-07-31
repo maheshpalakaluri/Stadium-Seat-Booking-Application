@@ -94,4 +94,24 @@ public class UserServiceImpl implements UserService {
 
 		return true;
 	}
+	
+	public boolean verifyUser(String token) {
+	    Optional<User> userOpt = userrepo.findByVerificationToken(token);
+
+	    if (userOpt.isEmpty()) {
+	        return false; // token doesn't exist — either never valid, or already used/overwritten
+	    }
+
+	    User user = userOpt.get();
+
+	    if (user.getTokenExpiry() == null || user.getTokenExpiry().isBefore(LocalDateTime.now())) {
+	        return false; // expired
+	    }
+
+	    user.setEnabled(true);
+	    user.setVerificationToken(null);
+	    user.setTokenExpiry(null);
+	    userrepo.save(user);
+	    return true;
+	}
 }

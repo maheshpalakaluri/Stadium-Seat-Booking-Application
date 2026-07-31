@@ -60,17 +60,15 @@ public class AuthController {
 	}
 
 	@GetMapping("/verify")
-	public ResponseEntity<String> verifyEmail(@RequestParam String token) {
-
-		User user = userrepo.findByVerificationToken(token).orElseThrow(() -> new RuntimeException("Invalid Token"));
-
-		user.setEnabled(true);
-		user.setVerificationToken(null);
-
-		userrepo.save(user);
-
-		return ResponseEntity.ok("Email verified successfully!");
+	public ResponseEntity<String> verifyEmail(@RequestParam("token") String token) {
+	    boolean verified = uservice.verifyUser(token);
+	    if (verified) {
+	        return ResponseEntity.ok("Email verified successfully! You can now log in.");
+	    } else {
+	        return ResponseEntity.badRequest().body("Invalid or expired verification link.");
+	    }
 	}
+	
 
 	@PostMapping("/generateToken")
 	public TokenDto authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
